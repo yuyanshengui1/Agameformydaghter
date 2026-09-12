@@ -9,7 +9,7 @@ import { TurnSystem } from '../systems/TurnSystem';
 import { EconomySystem } from '../systems/EconomySystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { HUDManager } from '../ui/HUDManager';
-import { GAME_CONFIG, CHARACTERS, THEMES } from '../config/gameConfig';
+import { GAME_CONFIG, CHARACTERS, THEMES, BOARD_LAYOUT } from '../config/gameConfig';
 import { TILE_TEXTURE_MAP, CHAR_TEXTURE_MAP } from '../config/assets';
 import { createTiles, isCorner } from '../data/tileLayout';
 import { getTilePosition, getPlayerPixelPosition } from '../utils/boardMath';
@@ -74,42 +74,58 @@ export class GameScene extends Phaser.Scene {
   private createBoard(): void {
     this.boardContainer = this.add.container(0, 0);
 
+    const { BOARD_X, BOARD_Y, TILE_SIZE, TILE_GAP, CORNER_SIZE } = BOARD_LAYOUT;
+    const sideLength = 10 * (TILE_SIZE + TILE_GAP);
+    const boardInner = 2 * CORNER_SIZE + sideLength;
+
+    // 棋盘背景面板（让棋盘背景清晰可见）
+    const boardBg = this.add.rectangle(
+      BOARD_X + boardInner / 2,
+      BOARD_Y + boardInner / 2,
+      boardInner + 16,
+      boardInner + 16,
+      0xffffff,
+      0.55
+    );
+    boardBg.setStrokeStyle(6, 0xffffff, 0.8);
+    this.boardContainer.add(boardBg);
+
     const tiles = GameState.getInternalState().tiles;
 
     for (const tile of tiles) {
       const pos = getTilePosition(tile.index);
       const isCornerTile = isCorner(tile.index);
-      const tileSize = isCornerTile ? 106 : 85;
+      const tileSize = isCornerTile ? CORNER_SIZE : TILE_SIZE;
 
       // 地块背景
-      const bg = this.add.rectangle(pos.x, pos.y, tileSize - 4, tileSize - 4, this.getTileColor(tile.type), 0.85);
-      bg.setStrokeStyle(3, this.getTileBorderColor(tile.type), 1);
+      const bg = this.add.rectangle(pos.x, pos.y, tileSize - 3, tileSize - 3, this.getTileColor(tile.type), 0.9);
+      bg.setStrokeStyle(2, this.getTileBorderColor(tile.type), 1);
 
       // 地块图标（使用预加载的图片纹理）
-      const iconSize = isCornerTile ? 44 : 36;
+      const iconSize = isCornerTile ? 30 : 24;
+      const iconY = isCornerTile ? pos.y - 6 : pos.y - 8;
       const textureKey = TILE_TEXTURE_MAP[tile.type];
       let tileIcon: Phaser.GameObjects.Image;
       if (textureKey && this.textures.exists(textureKey)) {
-        tileIcon = this.add.image(pos.x, pos.y - 12, textureKey).setDisplaySize(iconSize, iconSize);
+        tileIcon = this.add.image(pos.x, iconY, textureKey).setDisplaySize(iconSize, iconSize);
       } else {
-        // 回退：使用 emoji
-        const emojiText = this.add.text(pos.x, pos.y - 12, tile.emoji, {
-          fontSize: isCornerTile ? '32px' : '26px',
+        const emojiText = this.add.text(pos.x, iconY, tile.emoji, {
+          fontSize: isCornerTile ? '22px' : '18px',
         }).setOrigin(0.5);
         tileIcon = emojiText as unknown as Phaser.GameObjects.Image;
       }
 
       // 地块名称
-      const nameText = this.add.text(pos.x, pos.y + 20, tile.name, {
-        fontSize: '11px',
+      const nameText = this.add.text(pos.x, pos.y + 10, tile.name, {
+        fontSize: '9px',
         color: '#333333',
         fontFamily: 'sans-serif',
       }).setOrigin(0.5);
 
       // 价格标签（仅可购买地块）
       if (tile.price > 0) {
-        const priceText = this.add.text(pos.x, pos.y + 34, `💰${tile.price}`, {
-          fontSize: '10px',
+        const priceText = this.add.text(pos.x, pos.y + 20, `${tile.price}`, {
+          fontSize: '8px',
           color: '#666666',
           fontFamily: 'sans-serif',
         }).setOrigin(0.5);
@@ -117,13 +133,13 @@ export class GameScene extends Phaser.Scene {
       }
 
       // 房屋标记占位
-      const houseMarker = this.add.text(pos.x, pos.y - 30, '', {
-        fontSize: '14px',
+      const houseMarker = this.add.text(pos.x, pos.y - 20, '', {
+        fontSize: '10px',
       }).setOrigin(0.5);
       this.houseMarkers.set(tile.index, houseMarker);
 
       // 归属色条
-      const ownerBadge = this.add.rectangle(pos.x, pos.y + tileSize / 2 - 2, tileSize - 8, 6, 0xffffff, 0);
+      const ownerBadge = this.add.rectangle(pos.x, pos.y + tileSize / 2 - 2, tileSize - 6, 4, 0xffffff, 0);
       this.ownerBadges.set(tile.index, ownerBadge);
 
       this.boardContainer.add([bg, tileIcon, nameText, houseMarker, ownerBadge]);
@@ -143,9 +159,9 @@ export class GameScene extends Phaser.Scene {
 
       if (textureKey && this.textures.exists(textureKey)) {
         // 图片 token + 底层深色圆形阴影
-        const shadow = this.add.circle(pos.x + 2, pos.y + 2, 22, 0x000000, 0.25);
+        const shadow = this.add.circle(pos.x + 1, pos.y + 1, 16, 0x000000, 0.25);
         this.boardContainer.add(shadow);
-        token = this.add.image(pos.x, pos.y, textureKey).setDisplaySize(40, 40);
+        token = this.add.image(pos.x, pos.y, textureKey).setDisplaySize(30, 30);
       } else {
         // 回退：使用 emoji
         token = this.add
@@ -307,25 +323,24 @@ export class GameScene extends Phaser.Scene {
       const token = this.playerTokens.get(playerId);
 
       if (token) {
+        // 水平移动到目标格
         this.tweens.add({
           targets: token,
           x: pos.x,
-          y: pos.y,
           duration: GAME_CONFIG.MOVE_STEP_DELAY,
           ease: 'Quad.easeOut',
+        });
+        // 垂直跳跃（上-下），不做缩放闪烁
+        this.tweens.add({
+          targets: token,
+          y: pos.y - 18,
+          duration: GAME_CONFIG.MOVE_STEP_DELAY / 2,
+          ease: 'Quad.easeOut',
+          yoyo: true,
           onComplete: () => {
-            // 小弹跳
-            this.tweens.add({
-              targets: token,
-              scaleX: 1.2,
-              scaleY: 1.2,
-              duration: 100,
-              yoyo: true,
-              onComplete: () => {
-                stepIndex++;
-                moveNext();
-              },
-            });
+            token.y = pos.y;
+            stepIndex++;
+            moveNext();
           },
         });
       } else {
@@ -496,7 +511,7 @@ export class GameScene extends Phaser.Scene {
     const theme = this.currentTheme;
     const playerCount = GameState.getInternalState().players.length;
     const humanPlayer = GameState.getInternalState().players.find((p) => p.isHuman);
-    GameState.initGame(theme, playerCount, humanPlayer?.character ?? 'rabbit');
+    GameState.initGame(theme, playerCount, humanPlayer?.character ?? 'pink');
 
     // 重新创建场景
     this.scene.restart();

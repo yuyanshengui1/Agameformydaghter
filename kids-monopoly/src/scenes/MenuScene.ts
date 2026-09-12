@@ -11,7 +11,7 @@ import { THEMES } from '../config/gameConfig';
 export class MenuScene extends Phaser.Scene {
   private selectedTheme: ThemeType = 'ice-castle';
   private selectedPlayerCount: number = 3;
-  private selectedCharacter: CharacterId = 'rabbit';
+  private selectedCharacter: CharacterId = 'pink';
   private startScreenEl: HTMLElement;
 
   constructor() {

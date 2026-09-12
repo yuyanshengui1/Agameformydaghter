@@ -15,7 +15,7 @@ export type TileType =
 export type ThemeType = 'ice-castle' | 'garden';
 
 /** 玩家角色 ID */
-export type CharacterId = 'rabbit' | 'fox' | 'bear' | 'cat';
+export type CharacterId = 'pink' | 'blue' | 'violet' | 'green';
 
 /** 地块数据 */
 export interface TileData {

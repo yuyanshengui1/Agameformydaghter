@@ -17,10 +17,10 @@ export const TEXTURES = {
   TILE_JAIL: 'tile-jail',
   TILE_PORTAL: 'tile-portal',
   // 角色 token
-  CHAR_RABBIT: 'char-rabbit',
-  CHAR_FOX: 'char-fox',
-  CHAR_BEAR: 'char-bear',
-  CHAR_CAT: 'char-cat',
+  CHAR_PINK: 'char-pink',
+  CHAR_BLUE: 'char-blue',
+  CHAR_VIOLET: 'char-violet',
+  CHAR_GREEN: 'char-green',
 } as const;
 
 /** Phaser 预加载资源列表 */
@@ -35,10 +35,10 @@ export const ASSET_LIST: { key: string; path: string }[] = [
   { key: TEXTURES.TILE_TREASURE, path: '/assets/tiles/treasure.jpg' },
   { key: TEXTURES.TILE_JAIL, path: '/assets/tiles/jail.jpg' },
   { key: TEXTURES.TILE_PORTAL, path: '/assets/tiles/portal.jpg' },
-  { key: TEXTURES.CHAR_RABBIT, path: '/assets/characters/rabbit.jpg' },
-  { key: TEXTURES.CHAR_FOX, path: '/assets/characters/fox.jpg' },
-  { key: TEXTURES.CHAR_BEAR, path: '/assets/characters/bear.jpg' },
-  { key: TEXTURES.CHAR_CAT, path: '/assets/characters/cat.jpg' },
+  { key: TEXTURES.CHAR_PINK, path: '/assets/characters/pink.jpg' },
+  { key: TEXTURES.CHAR_BLUE, path: '/assets/characters/blue.jpg' },
+  { key: TEXTURES.CHAR_VIOLET, path: '/assets/characters/violet.jpg' },
+  { key: TEXTURES.CHAR_GREEN, path: '/assets/characters/green.jpg' },
 ];
 
 /** 地块类型 -> 纹理 key 映射 */
@@ -57,10 +57,10 @@ export const TILE_TEXTURE_MAP: Record<string, string> = {
 
 /** 角色 id -> 纹理 key 映射 */
 export const CHAR_TEXTURE_MAP: Record<string, string> = {
-  rabbit: TEXTURES.CHAR_RABBIT,
-  fox: TEXTURES.CHAR_FOX,
-  bear: TEXTURES.CHAR_BEAR,
-  cat: TEXTURES.CHAR_CAT,
+  pink: TEXTURES.CHAR_PINK,
+  blue: TEXTURES.CHAR_BLUE,
+  violet: TEXTURES.CHAR_VIOLET,
+  green: TEXTURES.CHAR_GREEN,
 };
 
 /** 骰子图片路径（HTML <img> 使用，不走 Phaser） */

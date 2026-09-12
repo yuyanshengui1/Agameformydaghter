@@ -30,24 +30,24 @@ export const GAME_CONFIG = {
 
 /** 棋盘布局常量 */
 export const BOARD_LAYOUT = {
-  /** 棋盘左上角 x */
-  BOARD_X: 110,
-  /** 棋盘左上角 y */
-  BOARD_Y: 110,
+  /** 棋盘左上角 x（水平居中） */
+  BOARD_X: 275,
+  /** 棋盘左上角 y（垂直居中） */
+  BOARD_Y: 20,
   /** 地块尺寸 */
-  TILE_SIZE: 85,
+  TILE_SIZE: 56,
   /** 地块间隙 */
-  TILE_GAP: 4,
+  TILE_GAP: 3,
   /** 角落地块尺寸（更大） */
-  CORNER_SIZE: 106,
+  CORNER_SIZE: 70,
 } as const;
 
 /** 角色定义 */
 export const CHARACTERS = [
-  { id: 'rabbit', name: '小兔子', emoji: '🐰', color: 0xffb6c1 },
-  { id: 'fox', name: '小狐狸', emoji: '🦊', color: 0xffa500 },
-  { id: 'bear', name: '小熊', emoji: '🐻', color: 0xd2a679 },
-  { id: 'cat', name: '小猫咪', emoji: '🐱', color: 0xdda0dd },
+  { id: 'pink', name: '粉粉公主', emoji: '👑', color: 0xffb6c1 },
+  { id: 'blue', name: '蓝蓝公主', emoji: '👑', color: 0x87ceeb },
+  { id: 'violet', name: '紫紫公主', emoji: '👑', color: 0xdaa520 },
+  { id: 'green', name: '绿绿公主', emoji: '👑', color: 0x90ee90 },
 ] as const;
 
 /** 主题定义 */
