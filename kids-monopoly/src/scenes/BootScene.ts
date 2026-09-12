@@ -23,6 +23,8 @@ export class BootScene extends Phaser.Scene {
 
     // 预加载所有图片资源
     for (const asset of ASSET_LIST) {
+      // 防御性过滤：跳过无效的 key/path，避免 Phaser 抛出 "Invalid File key" 错误
+      if (!asset?.key || !asset?.path) continue;
       this.load.image(asset.key, asset.path);
     }
 

@@ -85,9 +85,9 @@ export class GameScene extends Phaser.Scene {
       boardInner + 16,
       boardInner + 16,
       0xffffff,
-      0.55
+      0.72
     );
-    boardBg.setStrokeStyle(6, 0xffffff, 0.8);
+    boardBg.setStrokeStyle(6, 0xffffff, 0.9);
     this.boardContainer.add(boardBg);
 
     const tiles = GameState.getInternalState().tiles;
@@ -489,7 +489,7 @@ export class GameScene extends Phaser.Scene {
       });
     } else if (player.isHuman && !player.isBankrupt) {
       this.hud.setDiceEnabled(true);
-      this.hud.showMessage(`🎲 轮到你了！掷骰子吧！`, 2000);
+      this.hud.showMessage(`🎲 ${player.emoji} ${player.name} 的回合，掷骰子吧！`, 2000);
     }
   }
 
@@ -509,9 +509,11 @@ export class GameScene extends Phaser.Scene {
   private restartGame(): void {
     // 重置游戏
     const theme = this.currentTheme;
-    const playerCount = GameState.getInternalState().players.length;
-    const humanPlayer = GameState.getInternalState().players.find((p) => p.isHuman);
-    GameState.initGame(theme, playerCount, humanPlayer?.character ?? 'pink');
+    const players = GameState.getInternalState().players;
+    const playerCount = players.length;
+    const humanPlayer = players.find((p) => p.isHuman);
+    const humanCount = players.filter((p) => p.isHuman).length;
+    GameState.initGame(theme, playerCount, humanPlayer?.character ?? 'pink', humanCount);
 
     // 重新创建场景
     this.scene.restart();

@@ -136,43 +136,46 @@ export class ChallengePanel {
     voiceBtn.addEventListener('click', () => {
       if (this.answered) return;
 
-      // 先播放单词发音作为提示
-      VoiceSystem.speakEnglish(word);
+      voiceBtn.classList.add('listening');
+      voiceBtn.textContent = '🔊 播放发音中...';
 
-      setTimeout(() => {
-        const callbacks: VoiceCallbacks = {
-          onResult: (success, transcript) => {
-            if (this.answered) return;
-            voiceBtn.classList.remove('listening');
-            voiceBtn.textContent = '🎤 念出单词';
-            if (success) {
-              this.handleResult(true);
-            } else if (transcript) {
-              this.handleResult(false);
-            }
-          },
-          onError: (error) => {
-            voiceBtn.classList.remove('listening');
-            voiceBtn.textContent = '🎤 念出单词';
-            if (error === 'not-allowed' || error === 'service-not-allowed') {
-              this.showKeyboardFallback(word);
-            }
-          },
-          onEnd: () => {
-            voiceBtn.classList.remove('listening');
-            voiceBtn.textContent = '🎤 念出单词';
-          },
-        };
-
-        const started = VoiceSystem.startRecognition(word, callbacks);
-        if (!started) {
-          // 不支持语音识别，显示键盘输入
-          this.showKeyboardFallback(word);
-        } else {
-          voiceBtn.classList.add('listening');
+      // 先播放单词发音，等发音结束后再开始录音，避免麦克风录到 TTS 声音
+      VoiceSystem.speakEnglish(word, {
+        onend: () => {
+          if (this.answered) return;
           voiceBtn.textContent = '🔴 正在听...';
-        }
-      }, 500);
+
+          const callbacks: VoiceCallbacks = {
+            onResult: (success, transcript) => {
+              if (this.answered) return;
+              voiceBtn.classList.remove('listening');
+              voiceBtn.textContent = '🎤 念出单词';
+              if (success) {
+                this.handleResult(true);
+              } else if (transcript) {
+                this.handleResult(false);
+              }
+            },
+            onError: (error) => {
+              voiceBtn.classList.remove('listening');
+              voiceBtn.textContent = '🎤 念出单词';
+              if (error === 'not-allowed' || error === 'service-not-allowed' || error === 'no-speech') {
+                this.showKeyboardFallback(word);
+              }
+            },
+            onEnd: () => {
+              voiceBtn.classList.remove('listening');
+              voiceBtn.textContent = '🎤 再念一次';
+            },
+          };
+
+          const started = VoiceSystem.startRecognition(word, callbacks);
+          if (!started) {
+            // 不支持语音识别，显示键盘输入
+            this.showKeyboardFallback(word);
+          }
+        },
+      });
     });
 
     this.contentEl.appendChild(emojiEl);

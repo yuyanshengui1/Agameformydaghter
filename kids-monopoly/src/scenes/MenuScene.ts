@@ -11,6 +11,7 @@ import { THEMES } from '../config/gameConfig';
 export class MenuScene extends Phaser.Scene {
   private selectedTheme: ThemeType = 'ice-castle';
   private selectedPlayerCount: number = 3;
+  private selectedHumanCount: number = 1;
   private selectedCharacter: CharacterId = 'pink';
   private startScreenEl: HTMLElement;
 
@@ -42,6 +43,22 @@ export class MenuScene extends Phaser.Scene {
         document.querySelectorAll('.player-count-btn').forEach((b) => b.classList.remove('active'));
         btn.classList.add('active');
         this.selectedPlayerCount = parseInt((btn as HTMLElement).dataset.count!, 10);
+        // 人类玩家数不能超过总玩家数
+        if (this.selectedHumanCount > this.selectedPlayerCount) {
+          this.selectedHumanCount = this.selectedPlayerCount;
+          this.updateHumanCountButtons();
+        }
+      });
+    });
+
+    // 绑定人类玩家数量选择
+    document.querySelectorAll('.human-count-btn').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const count = parseInt((btn as HTMLElement).dataset.humans!, 10);
+        if (count > this.selectedPlayerCount) return; // 不能超过总玩家数
+        document.querySelectorAll('.human-count-btn').forEach((b) => b.classList.remove('active'));
+        btn.classList.add('active');
+        this.selectedHumanCount = count;
       });
     });
 
@@ -73,6 +90,7 @@ export class MenuScene extends Phaser.Scene {
     }
 
     this.applyTheme();
+    this.updateHumanCountButtons();
   }
 
   /** 应用主题到 body */
@@ -85,9 +103,18 @@ export class MenuScene extends Phaser.Scene {
 
   /** 开始新游戏 */
   private startNewGame(): void {
-    GameState.initGame(this.selectedTheme, this.selectedPlayerCount, this.selectedCharacter);
+    GameState.initGame(this.selectedTheme, this.selectedPlayerCount, this.selectedCharacter, this.selectedHumanCount);
     this.startScreenEl.classList.add('hidden');
     this.scene.start('GameScene');
+  }
+
+  /** 同步人类玩家数量按钮的激活状态 */
+  private updateHumanCountButtons(): void {
+    document.querySelectorAll('.human-count-btn').forEach((b) => {
+      const count = parseInt((b as HTMLElement).dataset.humans!, 10);
+      b.classList.toggle('active', count === this.selectedHumanCount);
+      (b as HTMLButtonElement).disabled = count > this.selectedPlayerCount;
+    });
   }
 
   /** 继续游戏 */

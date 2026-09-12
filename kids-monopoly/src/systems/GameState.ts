@@ -30,18 +30,21 @@ class GameStateManager {
   }
 
   /** 初始化新游戏 */
-  initGame(theme: ThemeType, playerCount: number, humanCharacter: CharacterId): void {
+  initGame(theme: ThemeType, playerCount: number, humanCharacter: CharacterId, humanCount: number = 1): void {
     this.state = this.createInitialState();
     this.state.theme = theme;
 
-    // 创建玩家：第一个为人类，其余为 AI
+    // 人类玩家数量不能超过总玩家数
+    const safeHumanCount = Math.min(Math.max(humanCount, 1), playerCount);
+
+    // 创建玩家：前 safeHumanCount 个为人类，其余为 AI
     const availableChars = [...CHARACTERS];
     const humanChar = availableChars.find((c) => c.id === humanCharacter)!;
     // 从可用角色中移除人类选择的角色
     const remaining = availableChars.filter((c) => c.id !== humanCharacter);
 
     const players: PlayerData[] = [];
-    // 人类玩家
+    // 第一个人类玩家（用户选择的角色）
     players.push({
       id: 'player-0',
       name: humanChar.name + '(你)',
@@ -55,11 +58,29 @@ class GameStateManager {
       jailTurns: 0,
     });
 
-    // AI 玩家
-    for (let i = 0; i < playerCount - 1; i++) {
-      const char = remaining[i];
+    // 其他人类玩家（如果有）
+    let charIdx = 0;
+    for (let i = 1; i < safeHumanCount; i++) {
+      const char = remaining[charIdx++];
       players.push({
-        id: `player-${i + 1}`,
+        id: `player-${i}`,
+        name: char.name + '(玩家' + (i + 1) + ')',
+        character: char.id as CharacterId,
+        emoji: char.emoji,
+        color: char.color,
+        coins: GAME_CONFIG.INITIAL_COINS,
+        position: 0,
+        isHuman: true,
+        isBankrupt: false,
+        jailTurns: 0,
+      });
+    }
+
+    // AI 玩家
+    for (let i = safeHumanCount; i < playerCount; i++) {
+      const char = remaining[charIdx++];
+      players.push({
+        id: `player-${i}`,
         name: char.name + '(AI)',
         character: char.id as CharacterId,
         emoji: char.emoji,

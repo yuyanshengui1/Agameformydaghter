@@ -64,6 +64,7 @@ export function createPhaserConfig(): Phaser.Types.Core.GameConfig {
     width: GAME_CONFIG.WIDTH,
     height: GAME_CONFIG.HEIGHT,
     backgroundColor: 'transparent',
+    transparent: true,
     scale: {
       mode: Phaser.Scale.FIT,
       autoCenter: Phaser.Scale.CENTER_BOTH,

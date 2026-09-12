@@ -158,8 +158,11 @@ class VoiceSystemImpl {
   }
 
   /** 朗读英文 */
-  speakEnglish(text: string, options?: { rate?: number }): void {
-    if (!this.synthesis) return;
+  speakEnglish(text: string, options?: { rate?: number; onend?: () => void }): void {
+    if (!this.synthesis) {
+      options?.onend?.();
+      return;
+    }
     this.synthesis.cancel();
 
     const utterance = new SpeechSynthesisUtterance(text);
@@ -170,6 +173,11 @@ class VoiceSystemImpl {
     const enVoice = voices.find((v) => v.lang.startsWith('en'));
     if (enVoice) {
       utterance.voice = enVoice;
+    }
+
+    if (options?.onend) {
+      utterance.onend = () => options.onend!();
+      utterance.onerror = () => options.onend!();
     }
 
     this.synthesis.speak(utterance);
