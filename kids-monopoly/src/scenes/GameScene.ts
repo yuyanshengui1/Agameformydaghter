@@ -10,6 +10,7 @@ import { EconomySystem } from '../systems/EconomySystem';
 import { SaveSystem } from '../systems/SaveSystem';
 import { HUDManager } from '../ui/HUDManager';
 import { GAME_CONFIG, CHARACTERS, THEMES } from '../config/gameConfig';
+import { TILE_TEXTURE_MAP, CHAR_TEXTURE_MAP } from '../config/assets';
 import { createTiles, isCorner } from '../data/tileLayout';
 import { getTilePosition, getPlayerPixelPosition } from '../utils/boardMath';
 
@@ -30,7 +31,7 @@ export class GameScene extends Phaser.Scene {
   private hud: HUDManager;
   private phase: GamePhase = 'idle';
   private tileGraphics: Phaser.GameObjects.Container[] = [];
-  private playerTokens: Map<string, Phaser.GameObjects.Text> = new Map();
+  private playerTokens: Map<string, Phaser.GameObjects.Image> = new Map();
   private houseMarkers: Map<number, Phaser.GameObjects.Text> = new Map();
   private ownerBadges: Map<number, Phaser.GameObjects.Rectangle> = new Map();
   private boardContainer!: Phaser.GameObjects.Container;
@@ -84,10 +85,19 @@ export class GameScene extends Phaser.Scene {
       const bg = this.add.rectangle(pos.x, pos.y, tileSize - 4, tileSize - 4, this.getTileColor(tile.type), 0.85);
       bg.setStrokeStyle(3, this.getTileBorderColor(tile.type), 1);
 
-      // 地块 emoji
-      const emojiText = this.add.text(pos.x, pos.y - 12, tile.emoji, {
-        fontSize: isCornerTile ? '32px' : '26px',
-      }).setOrigin(0.5);
+      // 地块图标（使用预加载的图片纹理）
+      const iconSize = isCornerTile ? 44 : 36;
+      const textureKey = TILE_TEXTURE_MAP[tile.type];
+      let tileIcon: Phaser.GameObjects.Image;
+      if (textureKey && this.textures.exists(textureKey)) {
+        tileIcon = this.add.image(pos.x, pos.y - 12, textureKey).setDisplaySize(iconSize, iconSize);
+      } else {
+        // 回退：使用 emoji
+        const emojiText = this.add.text(pos.x, pos.y - 12, tile.emoji, {
+          fontSize: isCornerTile ? '32px' : '26px',
+        }).setOrigin(0.5);
+        tileIcon = emojiText as unknown as Phaser.GameObjects.Image;
+      }
 
       // 地块名称
       const nameText = this.add.text(pos.x, pos.y + 20, tile.name, {
@@ -116,7 +126,7 @@ export class GameScene extends Phaser.Scene {
       const ownerBadge = this.add.rectangle(pos.x, pos.y + tileSize / 2 - 2, tileSize - 8, 6, 0xffffff, 0);
       this.ownerBadges.set(tile.index, ownerBadge);
 
-      this.boardContainer.add([bg, emojiText, nameText, houseMarker, ownerBadge]);
+      this.boardContainer.add([bg, tileIcon, nameText, houseMarker, ownerBadge]);
       this.tileGraphics.push(this.boardContainer.getAt(this.boardContainer.length - 1) as Phaser.GameObjects.Container);
     }
 
@@ -128,14 +138,23 @@ export class GameScene extends Phaser.Scene {
     const state = GameState.getInternalState();
     state.players.forEach((player, slot) => {
       const pos = getPlayerPixelPosition(player.position, slot);
-      const token = this.add.text(pos.x, pos.y, player.emoji, {
-        fontSize: '28px',
-      }).setOrigin(0.5);
+      const textureKey = CHAR_TEXTURE_MAP[player.character];
+      let token: Phaser.GameObjects.Image | Phaser.GameObjects.Text;
 
-      // 阴影
-      token.setShadow(2, 2, '#000000', 2);
+      if (textureKey && this.textures.exists(textureKey)) {
+        // 图片 token + 底层深色圆形阴影
+        const shadow = this.add.circle(pos.x + 2, pos.y + 2, 22, 0x000000, 0.25);
+        this.boardContainer.add(shadow);
+        token = this.add.image(pos.x, pos.y, textureKey).setDisplaySize(40, 40);
+      } else {
+        // 回退：使用 emoji
+        token = this.add
+          .text(pos.x, pos.y, player.emoji, { fontSize: '28px' })
+          .setOrigin(0.5);
+        token.setShadow(2, 2, '#000000', 2);
+      }
 
-      this.playerTokens.set(player.id, token);
+      this.playerTokens.set(player.id, token as Phaser.GameObjects.Image);
     });
   }
 

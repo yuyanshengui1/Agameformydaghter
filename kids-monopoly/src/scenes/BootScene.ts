@@ -1,21 +1,44 @@
 import Phaser from 'phaser';
+import { ASSET_LIST } from '../config/assets';
 
 /**
- * Boot 场景 - 加载资源、初始化。
- * 由于使用 emoji + CSS，不需要加载图片资源，直接转场到菜单。
+ * Boot 场景 - 加载图片资源，初始化后转场到菜单。
  */
 export class BootScene extends Phaser.Scene {
+  private progressText!: Phaser.GameObjects.Text;
+
   constructor() {
     super({ key: 'BootScene' });
   }
 
   preload(): void {
-    // 使用 emoji 和 CSS 绘制，不需要加载图片资源
-    // 可以在这里加载字体或其他资源
+    // 加载进度提示
+    this.progressText = this.add
+      .text(this.scale.width / 2, this.scale.height / 2, '加载中... 0%', {
+        fontSize: '28px',
+        color: '#ffffff',
+        fontFamily: 'sans-serif',
+      })
+      .setOrigin(0.5);
+
+    // 预加载所有图片资源
+    for (const asset of ASSET_LIST) {
+      this.load.image(asset.key, asset.path);
+    }
+
+    // 进度更新
+    this.load.on('progress', (value: number) => {
+      const pct = Math.round(value * 100);
+      this.progressText.setText(`加载中... ${pct}%`);
+    });
+
+    this.load.on('complete', () => {
+      this.progressText.setText('加载完成！');
+    });
   }
 
   create(): void {
-    // 直接转场到菜单场景
+    // 资源加载完成，转场到菜单场景
     this.scene.start('MenuScene');
   }
 }

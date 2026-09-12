@@ -16,7 +16,13 @@ body.theme-ice-castle {
   --theme-accent: #87ceeb;
   --theme-bg: #e0f4ff;
   --theme-text: #2c3e6f;
-  background: linear-gradient(135deg, #b0e2ff 0%, #e0f4ff 50%, #d4c5f9 100%);
+  background-image:
+    linear-gradient(135deg, rgba(176, 226, 255, 0.55) 0%, rgba(224, 244, 255, 0.35) 50%, rgba(212, 197, 249, 0.55) 100%),
+    url('/assets/backgrounds/ice-castle.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 body.theme-ice-castle::before {
@@ -51,7 +57,13 @@ body.theme-garden {
   --theme-accent: #ff69b4;
   --theme-bg: #f0fff0;
   --theme-text: #2d5f2d;
-  background: linear-gradient(135deg, #ffb6c1 0%, #fff0f5 40%, #98fb98 100%);
+  background-image:
+    linear-gradient(135deg, rgba(255, 182, 193, 0.5) 0%, rgba(255, 240, 245, 0.3) 40%, rgba(152, 251, 152, 0.5) 100%),
+    url('/assets/backgrounds/garden.jpg');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
 }
 
 body.theme-garden::before {

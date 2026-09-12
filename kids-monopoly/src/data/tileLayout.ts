@@ -24,7 +24,7 @@ const TILE_DEFS: TileDef[] = [
   { type: 'rest', name: '休息亭', emoji: '🍵', price: 0 },
   { type: 'math', name: '数字城堡', emoji: '🔢', price: 80 },
   { type: 'chinese', name: '语文长廊', emoji: '📖', price: 80 },
-  { type: 'chance', name: '机会', emoji: '❓', price: 0 },
+  { type: 'chinese', name: '诗词亭', emoji: '📜', price: 90 },
   { type: 'english', name: '英语小镇', emoji: '🐱', price: 90 },
   { type: 'math', name: '加减王国', emoji: '➖', price: 90 },
   // 11 = 右上角
@@ -32,7 +32,7 @@ const TILE_DEFS: TileDef[] = [
   // === 右边（索引 12~22，22=右下角监狱）===
   { type: 'chinese', name: '汉字森林', emoji: '🌳', price: 100 },
   { type: 'math', name: '算术塔', emoji: '🗼', price: 100 },
-  { type: 'chance', name: '机会', emoji: '❓', price: 0 },
+  { type: 'english', name: '英语峡谷', emoji: '🏞️', price: 110 },
   { type: 'english', name: '英语港口', emoji: '⛵', price: 110 },
   { type: 'treasure', name: '宝藏洞', emoji: '💎', price: 0 },
   { type: 'chinese', name: '成语花园', emoji: '🌸', price: 120 },
@@ -50,7 +50,7 @@ const TILE_DEFS: TileDef[] = [
   { type: 'portal', name: '传送门', emoji: '🌀', price: 0 },
   { type: 'english', name: '英语星空', emoji: '✨', price: 160 },
   { type: 'math', name: '数字星河', emoji: '⭐', price: 160 },
-  { type: 'chance', name: '机会', emoji: '❓', price: 0 },
+  { type: 'math', name: '几何花园', emoji: '📐', price: 160 },
   { type: 'chinese', name: '语文湖畔', emoji: '🏞️', price: 170 },
   { type: 'english', name: '英语彩虹', emoji: '🌈', price: 170 },
   // 33 = 左下角
@@ -64,7 +64,7 @@ const TILE_DEFS: TileDef[] = [
   { type: 'rest', name: '休息泉', emoji: '⛲', price: 0 },
   { type: 'math', name: '数字城堡', emoji: '🏰', price: 200 },
   { type: 'chinese', name: '语文星空', emoji: '🌌', price: 200 },
-  { type: 'chance', name: '机会', emoji: '❓', price: 0 },
+  { type: 'chinese', name: '汉字田野', emoji: '🌾', price: 210 },
   { type: 'english', name: '英语终点', emoji: '🎯', price: 220 },
 ];
 
