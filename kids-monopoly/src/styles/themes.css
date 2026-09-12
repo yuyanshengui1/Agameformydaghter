@@ -1,0 +1,84 @@
+/* === 默认变量（回退值 = 冰雪城堡）=== */
+:root {
+  --theme-main: #b0e2ff;
+  --theme-main-2: #ffffff;
+  --theme-secondary: #d4c5f9;
+  --theme-accent: #87ceeb;
+  --theme-bg: #e0f4ff;
+  --theme-text: #2c3e6f;
+}
+
+/* === 冰雪城堡主题 === */
+body.theme-ice-castle {
+  --theme-main: #b0e2ff;
+  --theme-main-2: #ffffff;
+  --theme-secondary: #d4c5f9;
+  --theme-accent: #87ceeb;
+  --theme-bg: #e0f4ff;
+  --theme-text: #2c3e6f;
+  background: linear-gradient(135deg, #b0e2ff 0%, #e0f4ff 50%, #d4c5f9 100%);
+}
+
+body.theme-ice-castle::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(255, 255, 255, 0.3) 2px, transparent 3px),
+    radial-gradient(circle at 70% 40%, rgba(255, 255, 255, 0.2) 3px, transparent 4px),
+    radial-gradient(circle at 40% 70%, rgba(255, 255, 255, 0.25) 2px, transparent 3px),
+    radial-gradient(circle at 85% 85%, rgba(255, 255, 255, 0.2) 3px, transparent 4px),
+    radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.15) 1px, transparent 2px);
+  background-size: 200px 200px, 250px 250px, 180px 180px, 220px 220px, 100px 100px;
+  animation: snow-fall 20s linear infinite;
+}
+
+@keyframes snow-fall {
+  0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
+  100% { background-position: 200px 400px, -250px 500px, 180px 360px, 220px 440px, 100px 200px; }
+}
+
+/* === 花园主题 === */
+body.theme-garden {
+  --theme-main: #ffb6c1;
+  --theme-main-2: #98fb98;
+  --theme-secondary: #fffacd;
+  --theme-accent: #ff69b4;
+  --theme-bg: #f0fff0;
+  --theme-text: #2d5f2d;
+  background: linear-gradient(135deg, #ffb6c1 0%, #fff0f5 40%, #98fb98 100%);
+}
+
+body.theme-garden::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(circle at 10% 15%, rgba(255, 182, 193, 0.4) 4px, transparent 5px),
+    radial-gradient(circle at 60% 30%, rgba(152, 251, 152, 0.3) 5px, transparent 6px),
+    radial-gradient(circle at 35% 65%, rgba(255, 250, 205, 0.4) 4px, transparent 5px),
+    radial-gradient(circle at 80% 80%, rgba(255, 105, 180, 0.25) 5px, transparent 6px),
+    radial-gradient(circle at 50% 50%, rgba(255, 182, 193, 0.2) 3px, transparent 4px);
+  background-size: 180px 180px, 230px 230px, 200px 200px, 250px 250px, 120px 120px;
+  animation: petal-fall 25s linear infinite;
+}
+
+@keyframes petal-fall {
+  0% { background-position: 0 0, 0 0, 0 0, 0 0, 0 0; }
+  100% { background-position: 180px 360px, -230px 460px, 200px 400px, 250px 500px, 120px 240px; }
+}
+
+/* === 主题切换过渡 === */
+body {
+  transition: background 0.8s ease, color 0.8s ease;
+}

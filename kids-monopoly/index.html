@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>儿童益智大富翁</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="stylesheet" href="./src/styles/main.css" />
+  <link rel="stylesheet" href="./src/styles/themes.css" />
+  <link rel="stylesheet" href="./src/styles/hud.css" />
+</head>
+<body class="theme-ice-castle">
+  <div id="game-container"></div>
+
+  <!-- 开始界面 -->
+  <div class="start-screen" id="start-screen">
+    <div class="start-panel">
+      <h1 class="game-title">🦄 儿童益智大富翁</h1>
+      <p class="game-subtitle">和小动物们一起快乐学习吧！</p>
+
+      <div class="select-group">
+        <label class="select-label">选择场景</label>
+        <div class="theme-select">
+          <button class="theme-btn active" data-theme="ice-castle">❄️ 冰雪城堡</button>
+          <button class="theme-btn" data-theme="garden">🌸 花园</button>
+        </div>
+      </div>
+
+      <div class="select-group">
+        <label class="select-label">玩家数量</label>
+        <div class="player-select">
+          <button class="player-count-btn" data-count="2">2人</button>
+          <button class="player-count-btn active" data-count="3">3人</button>
+          <button class="player-count-btn" data-count="4">4人</button>
+        </div>
+      </div>
+
+      <div class="select-group">
+        <label class="select-label">选择你的角色</label>
+        <div class="character-select" id="character-select">
+          <div class="character-card active" data-character="rabbit">
+            <span class="character-emoji">🐰</span>
+            <span class="character-name">小兔子</span>
+          </div>
+          <div class="character-card" data-character="fox">
+            <span class="character-emoji">🦊</span>
+            <span class="character-name">小狐狸</span>
+          </div>
+          <div class="character-card" data-character="bear">
+            <span class="character-emoji">🐻</span>
+            <span class="character-name">小熊</span>
+          </div>
+          <div class="character-card" data-character="cat">
+            <span class="character-emoji">🐱</span>
+            <span class="character-name">小猫咪</span>
+          </div>
+        </div>
+      </div>
+
+      <button class="start-btn" id="start-btn">🎲 开始游戏</button>
+      <button class="continue-btn hidden" id="continue-btn">📁 继续游戏</button>
+    </div>
+  </div>
+
+  <!-- HUD 覆盖层 -->
+  <div class="hud-overlay hidden" id="hud-overlay">
+    <!-- 顶部状态栏 -->
+    <div class="top-bar" id="top-bar">
+      <span class="round-info" id="round-info">第 1 回合</span>
+      <div class="player-list" id="player-list"></div>
+    </div>
+
+    <!-- 骰子面板 -->
+    <div class="dice-panel" id="dice-panel">
+      <div class="dice-display">
+        <div class="dice-face" id="dice-1">🎲</div>
+        <div class="dice-face" id="dice-2">🎲</div>
+      </div>
+      <button class="roll-btn" id="roll-btn">🎲 掷骰子</button>
+    </div>
+
+    <!-- 底部菜单栏 -->
+    <div class="bottom-bar" id="bottom-bar">
+      <button class="menu-btn" id="save-btn">💾 存档</button>
+      <button class="menu-btn" id="menu-btn">☰ 菜单</button>
+      <button class="menu-btn" id="help-btn">❓ 帮助</button>
+    </div>
+
+    <!-- 挑战面板 -->
+    <div class="challenge-overlay hidden" id="challenge-overlay">
+      <div class="challenge-panel" id="challenge-panel">
+        <h2 class="challenge-title" id="challenge-title">答题挑战</h2>
+        <div class="challenge-content" id="challenge-content"></div>
+        <div class="challenge-feedback hidden" id="challenge-feedback"></div>
+        <div class="challenge-actions" id="challenge-actions"></div>
+      </div>
+    </div>
+
+    <!-- 消息提示 -->
+    <div class="message-toast" id="message-toast"></div>
+
+    <!-- 菜单覆盖层 -->
+    <div class="menu-overlay hidden" id="menu-overlay">
+      <div class="menu-panel" id="menu-panel">
+        <h2 class="menu-title">菜单</h2>
+        <button class="menu-action-btn" id="resume-btn">▶️ 继续游戏</button>
+        <button class="menu-action-btn" id="save-menu-btn">💾 保存游戏</button>
+        <button class="menu-action-btn" id="restart-btn">🔄 重新开始</button>
+        <button class="menu-action-btn danger" id="quit-btn">🏠 返回主页</button>
+      </div>
+    </div>
+
+    <!-- 帮助覆盖层 -->
+    <div class="menu-overlay hidden" id="help-overlay">
+      <div class="menu-panel" id="help-panel">
+        <h2 class="menu-title">游戏帮助</h2>
+        <div class="help-content" id="help-content">
+          <p>🎲 <b>掷骰子</b>：点击右下角按钮，按点数前进。</p>
+          <p>➕ <b>算术格</b>：做一道加减法题，答对获得地块。</p>
+          <p>🔤 <b>英语格</b>：看图片念出英文单词，答对获得地块。</p>
+          <p>📖 <b>语文格</b>：听词语，选出缺失的字，答对获得地块。</p>
+          <p>🏠 <b>盖房子</b>：再次进入自己的地块答题正确后可盖房升级。</p>
+          <p>💰 <b>租金</b>：落在别人的地块要付租金。</p>
+          <p>🏆 <b>获胜</b>：最后剩下的玩家获胜！</p>
+        </div>
+        <button class="menu-action-btn" id="help-close-btn">知道了</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.ts"></script>
+</body>
+</html>
