@@ -1,0 +1,16 @@
+{
+  "rounds": 40,
+  "challenges": 0,
+  "errors": [
+    "[console.error] Failed to load resource: the server responded with a status of 404 (Not Found)"
+  ],
+  "logs": [
+    "[console.debug] [vite] connecting...",
+    "[console.debug] [vite] connected.",
+    "[console.log] %c %c %c %c %c Phaser v3.90.0 (WebGL | Web Audio) %c https://phaser.io/v390 background: #ff0000 background: #ffff00 background: #00ff00 background: #00ffff color: #ffffff; background: #000000 background: transparent",
+    "[console.warning] [.WebGL-0x163c0016ae00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[console.warning] [.WebGL-0x163c0016ae00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[console.warning] [.WebGL-0x163c0016ae00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels",
+    "[console.warning] [.WebGL-0x163c0016ae00]GL Driver Message (OpenGL, Performance, GL_CLOSE_PATH_NV, High): GPU stall due to ReadPixels (this message will no longer repeat)"
+  ]
+}
